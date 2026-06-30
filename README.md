@@ -3,7 +3,8 @@
 
 A data-driven decision-support platform analysing financial literacy and financial inclusion across Jharkhand, India — built for citizens, government officials, and NGOs.
 
-**Live demo:** 
+**Live demo:** https://kavikar29003.github.io/jh-fin-inclusion-platform/
+
 
 ---
 

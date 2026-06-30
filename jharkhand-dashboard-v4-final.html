@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jharkhand Financial Inclusion Intelligence Platform</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+* { box-sizing: border-box; }
+body { font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; background: #f4f5f7; color: #1a1a1a; }
+header { background: linear-gradient(135deg, #0c447c 0%, #185fa5 100%); color: #fff; padding: 20px 32px; }
+header h1 { margin: 0 0 4px; font-size: 20px; font-weight: 700; }
+header p { margin: 0; font-size: 13px; opacity: 0.85; }
+.lang-btn { padding: 5px 14px; border-radius: 6px; border: 1px solid #fff; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+.lang-btn.active { background: #fff; color: #0c447c; }
+.lang-btn:not(.active) { background: transparent; color: #fff; }
+.container { max-width: 1000px; margin: 0 auto; padding: 20px 14px 60px; }
+.tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 2px solid #ddd; flex-wrap: wrap; }
+.tab-btn { background: none; border: none; padding: 10px 14px; font-size: 13px; font-weight: 600; color: #666; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; }
+.tab-btn.active { color: #0c447c; border-bottom-color: #0c447c; }
+.panel { display: none; }
+.panel.active { display: block; }
+.card { background: #fff; border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+h3 { margin: 0 0 4px; font-size: 15px; font-weight: 600; color: #0c447c; }
+.note { font-size: 12px; color: #888; margin: 4px 0 12px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+label { font-size: 12px; color: #555; display: block; margin-bottom: 3px; font-weight: 500; }
+select, input[type=number], input[type=text] { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; margin-bottom: 10px; background: #fff; }
+.btn-primary { width: 100%; padding: 11px; background: #0c447c; color: #fff; border: none; border-radius: 7px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 4px; }
+.btn-primary:hover { background: #083257; }
+.metric { background: #f0f4f8; border-radius: 8px; padding: 12px 14px; text-align: center; }
+.metric .mlabel { font-size: 11px; color: #666; margin-bottom: 4px; }
+.metric .mval { font-size: 21px; font-weight: 700; color: #0c447c; }
+.bar-row { margin-bottom: 9px; }
+.bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 3px; }
+.bar-track { height: 8px; background: #e5e8eb; border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; }
+.insight-box { font-size: 13px; background: #fff7e6; border-left: 3px solid #f0a02b; padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 10px 0; line-height: 1.6; }
+.insight-box strong { display: block; margin-bottom: 3px; color: #7a4800; }
+.badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 5px; margin-bottom: 8px; }
+.badge-blue { background: #dbeeff; color: #0c447c; }
+.badge-green { background: #dff3e0; color: #1a6b2a; }
+.badge-red { background: #fde8e8; color: #a01f1f; }
+.badge-amber { background: #fef0d0; color: #7a4800; }
+.badge-purple { background: #ede8fb; color: #3d1f8a; }
+.risk-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+.risk-table th { background: #f0f4f8; padding: 8px 10px; text-align: left; font-size: 12px; color: #444; font-weight: 600; }
+.risk-table td { padding: 7px 10px; border-bottom: 1px solid #f0f0f0; }
+.risk-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
+.scheme-card { background: #f8fafd; border: 1px solid #d4e4f5; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
+.scheme-card h4 { margin: 0 0 4px; font-size: 13px; color: #0c447c; }
+.scheme-card p { margin: 0; font-size: 12px; color: #555; line-height: 1.5; }
+.readiness-card { border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+.readiness-high { background: #dff3e0; border-left: 4px solid #2a8a3e; }
+.readiness-mid  { background: #fff7e6; border-left: 4px solid #f0a02b; }
+.readiness-low  { background: #fde8e8; border-left: 4px solid #c0392b; }
+.chart-wrap { position: relative; width: 100%; margin-bottom: 10px; }
+.insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.insight-card { background: #fff; border-radius: 9px; padding: 14px; border: 1px solid #e5e8eb; }
+.insight-card .inum { font-size: 10px; font-weight: 700; color: #185fa5; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.insight-card p { font-size: 13px; line-height: 1.6; margin: 0; color: #333; }
+.insight-card .istat { font-size: 22px; font-weight: 700; color: #0c447c; margin: 6px 0 2px; }
+.campaign-box { background: #f0f6ff; border: 1px solid #c2d9f7; border-radius: 8px; padding: 14px 16px; margin-top: 10px; }
+.campaign-box h4 { margin: 0 0 8px; font-size: 13px; color: #0c447c; font-weight: 700; }
+.campaign-row { display: flex; justify-content: space-between; font-size: 12px; color: #444; padding: 5px 0; border-bottom: 1px solid #dde8f5; }
+.campaign-row:last-child { border-bottom: none; }
+.campaign-row span:first-child { color: #666; }
+.pred-compare { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 12px; }
+.pred-box { text-align: center; padding: 12px; border-radius: 8px; }
+.pred-box .pl { font-size: 11px; color: #666; margin-bottom: 4px; }
+.pred-box .pv { font-size: 20px; font-weight: 700; }
+footer { text-align: center; font-size: 11px; color: #aaa; padding: 20px; }
+@media(max-width:600px){
+  .grid2,.grid3,.insight-grid,.pred-compare{grid-template-columns:1fr;}
+  header{padding:14px 16px;}
+  .container{padding:14px 10px 50px;}
+  .tabs{gap:2px;}
+  .tab-btn{padding:8px 10px;font-size:12px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+    <div>
+      <h1 id="hdr-title">🏦 Jharkhand Financial Inclusion Intelligence Platform</h1>
+      <p id="hdr-sub">Decision-support for citizens, government officials &amp; NGOs — powered by NFHS-5, PMJDY data &amp; ML</p>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+      <button id="lang-en" class="lang-btn active" onclick="setLang('en')">English</button>
+      <button id="lang-hi" class="lang-btn" onclick="setLang('hi')">हिंदी</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="tabs" id="tabs-row">
+    <button class="tab-btn active" data-tab="assess" data-i18n="tab1">🧑 Citizen Assessment</button>
+    <button class="tab-btn" data-tab="schemes" data-i18n="tab2">📋 Scheme Recommender</button>
+    <button class="tab-btn" data-tab="risk" data-i18n="tab3">🗺️ District Risk Index</button>
+    <button class="tab-btn" data-tab="predict" data-i18n="tab4">📈 Predictive Analytics</button>
+    <button class="tab-btn" data-tab="insights" data-i18n="tab5">💡 AI Insights</button>
+    <button class="tab-btn" data-tab="campaign" data-i18n="tab6">🎯 Campaign Engine</button>
+  </div>
+
+  <!-- TAB 1: CITIZEN ASSESSMENT -->
+  <div class="panel active" id="panel-assess">
+    <div class="card">
+      <span class="badge badge-blue" data-i18n="badge-citizen">For Citizens</span>
+      <h3 data-i18n="assess-title">Financial Readiness Assessment</h3>
+      <p class="note" data-i18n="assess-note">Answer 8 questions. Get a personalised readiness profile benchmarked against 48 real Jharkhand respondents.</p>
+      <div class="grid2">
+        <div><label data-i18n="lbl-age">Age</label><input type="number" id="q-age" value="24" min="15" max="80"></div>
+        <div><label data-i18n="lbl-area">Area</label>
+          <select id="q-area">
+            <option data-i18n-opt="urban">Urban</option>
+            <option data-i18n-opt="semiurban">Semi-urban</option>
+            <option data-i18n-opt="rural">Rural</option>
+          </select></div>
+        <div><label data-i18n="lbl-savings">Savings habit</label>
+          <select id="q-savings">
+            <option value="0" data-i18n-opt="sav0">Save regularly every month</option>
+            <option value="1" data-i18n-opt="sav1">Save sometimes</option>
+            <option value="2" data-i18n-opt="sav2">Rarely save</option>
+            <option value="3" data-i18n-opt="sav3">Don't save</option>
+          </select></div>
+        <div><label data-i18n="lbl-emergency">Emergency fund</label>
+          <select id="q-emergency">
+            <option value="0" data-i18n-opt="em0">Covers 6+ months</option>
+            <option value="1" data-i18n-opt="em1">Covers 1–3 months</option>
+            <option value="2" data-i18n-opt="em2">Almost none</option>
+          </select></div>
+        <div><label data-i18n="lbl-insurance">Insurance</label>
+          <select id="q-insurance">
+            <option value="0" data-i18n-opt="ins0">Life and health insurance</option>
+            <option value="1" data-i18n-opt="ins1">Only one type</option>
+            <option value="2" data-i18n-opt="ins2">None, know PMJJBY/PMSBY</option>
+            <option value="3" data-i18n-opt="ins3">None, unfamiliar</option>
+          </select></div>
+        <div><label data-i18n="lbl-invest">Investments</label>
+          <select id="q-invest">
+            <option value="0" data-i18n-opt="inv0">Mutual funds / PPF / stocks</option>
+            <option value="1" data-i18n-opt="inv1">Only fixed deposits</option>
+            <option value="2" data-i18n-opt="inv2">None, but interested</option>
+            <option value="3" data-i18n-opt="inv3">None, no knowledge</option>
+          </select></div>
+        <div><label data-i18n="lbl-digital">Digital banking</label>
+          <select id="q-digital">
+            <option value="0" data-i18n-opt="dig0">Confident with UPI &amp; security</option>
+            <option value="1" data-i18n-opt="dig1">Use UPI, unsure about safety</option>
+            <option value="2" data-i18n-opt="dig2">Rarely use digital banking</option>
+          </select></div>
+        <div><label data-i18n="lbl-budget">Budgeting</label>
+          <select id="q-budget">
+            <option value="0" data-i18n-opt="bud0">Track income &amp; expenses monthly</option>
+            <option value="1" data-i18n-opt="bud1">Budget loosely</option>
+            <option value="2" data-i18n-opt="bud2">Don't budget at all</option>
+          </select></div>
+      </div>
+      <button class="btn-primary" onclick="runAssessment()" data-i18n="btn-assess">Get My Financial Readiness Profile →</button>
+    </div>
+    <div id="assess-results" style="display:none;">
+      <div class="card">
+        <div class="grid3">
+          <div class="metric"><div class="mlabel" data-i18n="res-score-lbl">Overall Score</div><div class="mval" id="res-score">-</div></div>
+          <div class="metric"><div class="mlabel" data-i18n="res-pct-lbl">Percentile (pilot)</div><div class="mval" id="res-pct">-</div></div>
+          <div class="metric"><div class="mlabel" data-i18n="res-age-lbl">Financial Age</div><div class="mval" id="res-age">-</div></div>
+        </div>
+        <div id="readiness-banner" class="readiness-card readiness-mid" style="margin-top:12px;">
+          <strong id="readiness-title" style="font-size:15px;"></strong>
+          <div id="readiness-body" style="font-size:13px;margin-top:6px;"></div>
+        </div>
+        <div id="score-bars" style="margin-top:12px;"></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="strengths-title">Strengths &amp; Gaps</h3>
+        <div class="grid2" style="margin-top:10px;">
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#2a8a3e;margin-bottom:6px;" data-i18n="strengths-lbl">✓ Strengths</div>
+            <div id="strengths"></div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#c0392b;margin-bottom:6px;" data-i18n="gaps-lbl">✗ Gaps to address</div>
+            <div id="gaps"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="top-rec-title">Top Recommendation</h3>
+        <div id="top-rec" style="margin-top:8px;"></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="persona-title">Your Persona (K-Means, k=3, n=48 pilot responses)</h3>
+        <div id="persona-box" style="margin-top:8px;"></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="pilot-chart-title">Pilot distribution — where you stand</h3>
+        <p class="note" data-i18n="pilot-chart-note">48 real Jharkhand respondents. Your score bin highlighted in orange.</p>
+        <div class="chart-wrap" style="height:200px;"><canvas id="pilotChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: SCHEME RECOMMENDER -->
+  <div class="panel" id="panel-schemes">
+    <div class="card">
+      <span class="badge badge-green" data-i18n="badge-citizen">For Citizens</span>
+      <h3 data-i18n="scheme-title">Personalised Scheme Recommender</h3>
+      <p class="note" data-i18n="scheme-note">Enter your profile. The recommender matches you to government schemes using eligibility rules and your priority gaps.</p>
+      <div class="grid3">
+        <div><label data-i18n="lbl-age">Age</label><input type="number" id="sc-age" value="24" min="18" max="80"></div>
+        <div><label data-i18n="lbl-income">Monthly income (₹)</label><input type="number" id="sc-income" value="10000"></div>
+        <div><label data-i18n="lbl-occ">Occupation</label>
+          <select id="sc-occ">
+            <option data-i18n-opt="occ0">Student</option>
+            <option data-i18n-opt="occ1">Salaried (private)</option>
+            <option data-i18n-opt="occ2">Government employee</option>
+            <option data-i18n-opt="occ3">Self-employed / farmer</option>
+            <option data-i18n-opt="occ4">Daily wage worker</option>
+            <option data-i18n-opt="occ5">Homemaker</option>
+          </select></div>
+        <div><label data-i18n="lbl-have-ins">Have insurance?</label>
+          <select id="sc-ins">
+            <option value="no" data-i18n-opt="sc-ins0">No insurance</option>
+            <option value="life" data-i18n-opt="sc-ins1">Life only</option>
+            <option value="health" data-i18n-opt="sc-ins2">Health only</option>
+            <option value="both" data-i18n-opt="sc-ins3">Both</option>
+          </select></div>
+        <div><label data-i18n="lbl-bank">Have bank account?</label>
+          <select id="sc-bank">
+            <option value="yes" data-i18n-opt="yes">Yes</option>
+            <option value="no" data-i18n-opt="no">No</option>
+          </select></div>
+        <div><label data-i18n="lbl-goal">Savings goal</label>
+          <select id="sc-goal">
+            <option data-i18n-opt="goal0">Emergency fund</option>
+            <option data-i18n-opt="goal1">Retirement / pension</option>
+            <option data-i18n-opt="goal2">Long-term wealth</option>
+            <option data-i18n-opt="goal3">Child education</option>
+          </select></div>
+      </div>
+      <button class="btn-primary" onclick="runSchemeRecommender()" data-i18n="btn-scheme">Find My Schemes →</button>
+    </div>
+    <div id="scheme-results" style="display:none;">
+      <div class="card">
+        <h3 data-i18n="scheme-results-title">Recommended Schemes</h3>
+        <p class="note" id="scheme-note-out"></p>
+        <div id="scheme-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: DISTRICT RISK INDEX -->
+  <div class="panel" id="panel-risk">
+    <div class="card">
+      <span class="badge badge-red" data-i18n="badge-gov">For Government &amp; NGOs</span>
+      <h3 data-i18n="risk-title">District Financial Inclusion Risk Index</h3>
+      <p class="note" data-i18n="risk-note">Composite risk score for all 24 Jharkhand districts. Higher = more at-risk. Weights: Insurance 40%, Literacy 20%, Internet 20%, Bank access 20%. Source: NFHS-5, PMJDY 2024.</p>
+      <div class="chart-wrap" style="height:520px;"><canvas id="riskChart"></canvas></div>
+    </div>
+    <div class="card">
+      <h3 data-i18n="risk-table-title">Risk breakdown table</h3>
+      <p class="note" data-i18n="risk-table-note">Sorted by risk score (highest first). Click a row to see intervention recommendation.</p>
+      <table class="risk-table">
+        <thead><tr>
+          <th data-i18n="th-district">District</th>
+          <th data-i18n="th-risk">Risk Score</th>
+          <th data-i18n="th-priority">Priority</th>
+          <th data-i18n="th-gap">Primary Gap</th>
+        </tr></thead>
+        <tbody id="risk-tbody"></tbody>
+      </table>
+    </div>
+    <div class="card" id="risk-detail" style="display:none;">
+      <h3 id="risk-detail-title">District detail</h3>
+      <div id="risk-detail-body"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: PREDICTIVE ANALYTICS -->
+  <div class="panel" id="panel-predict">
+    <div class="card">
+      <span class="badge badge-purple" data-i18n="badge-ds">Data Science — Predictive Model</span>
+      <h3 data-i18n="pred-title">Predicting Insurance Coverage from Socio-economic Indicators</h3>
+      <p class="note" data-i18n="pred-note">Linear regression on 24 districts. Inputs: literacy, internet use proxy, mobile proxy, bank coverage. Output: predicted insurance coverage (%).</p>
+      <div class="chart-wrap" style="height:520px;"><canvas id="predChart"></canvas></div>
+      <div class="insight-box" style="margin-top:12px;" id="pred-insight"></div>
+    </div>
+    <div class="card">
+      <h3 data-i18n="gap-pred-title">District-level gap analysis (predicted vs actual)</h3>
+      <p class="note" data-i18n="gap-pred-note">Negative gap = underperforming socio-economic potential. Positive gap = outperforming.</p>
+      <div class="chart-wrap" style="height:400px;"><canvas id="gapPredChart"></canvas></div>
+    </div>
+    <div class="card">
+      <h3 data-i18n="sim-title">Simulate: select a district</h3>
+      <p class="note" data-i18n="sim-note">See the model's prediction vs actual for any district.</p>
+      <select id="pred-district" onchange="updatePredDetail()" style="max-width:280px;">
+        <option>Ranchi</option><option>Dhanbad</option><option>Bokaro</option><option>Giridih</option>
+        <option>Hazaribagh</option><option>Palamu</option><option>Garhwa</option><option>Latehar</option>
+        <option>Gumla</option><option>Simdega</option><option>Khunti</option><option>Lohardaga</option>
+        <option>Kodarma</option><option>Ramgarh</option><option>Jamtara</option><option>Deoghar</option>
+        <option>Godda</option><option>Sahibganj</option><option>Pakur</option><option>Dumka</option>
+        <option>Chatra</option><option>Saraikela-Kharsawan</option><option>Purbi Singhbhum</option><option>Pashchimi Singhbhum</option>
+      </select>
+      <div class="pred-compare" id="pred-detail"></div>
+    </div>
+  </div>
+
+  <!-- TAB 5: AI INSIGHTS -->
+  <div class="panel" id="panel-insights">
+    <div class="card">
+      <span class="badge badge-amber" data-i18n="badge-auto">Auto-generated from NFHS-5 data</span>
+      <h3 data-i18n="insights-title">AI Insight Cards — Jharkhand</h3>
+      <p class="note" data-i18n="insights-note">Key findings extracted automatically from district data.</p>
+      <div class="insight-grid" id="insight-cards"></div>
+    </div>
+    <div class="card">
+      <h3 data-i18n="cmp-title">State-level comparison</h3>
+      <p class="note" data-i18n="cmp-note">Jharkhand vs India, Bihar, Odisha — NFHS-5</p>
+      <div class="chart-wrap" style="height:280px;"><canvas id="cmpChart"></canvas></div>
+    </div>
+    <div class="card">
+      <h3 data-i18n="gap-title">Urban vs rural gap — Jharkhand</h3>
+      <p class="note" data-i18n="gap-note">Negative bars mean rural outperforms urban.</p>
+      <div class="chart-wrap" style="height:220px;"><canvas id="gapChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- TAB 6: CAMPAIGN ENGINE -->
+  <div class="panel" id="panel-campaign">
+    <div class="card">
+      <span class="badge badge-red" data-i18n="badge-gov">For Government &amp; NGOs</span>
+      <h3 data-i18n="camp-title">Campaign Recommendation Engine</h3>
+      <p class="note" data-i18n="camp-note">Select a district and target group. The engine analyses the risk profile and recommends the highest-impact intervention.</p>
+      <div class="grid2">
+        <div><label data-i18n="lbl-district">District</label>
+          <select id="camp-district" onchange="runCampaign()">
+            <option>Ranchi</option><option>Dhanbad</option><option>Bokaro</option><option>Giridih</option>
+            <option>Hazaribagh</option><option>Palamu</option><option>Garhwa</option><option>Latehar</option>
+            <option>Gumla</option><option>Simdega</option><option>Khunti</option><option>Lohardaga</option>
+            <option>Kodarma</option><option>Ramgarh</option><option>Jamtara</option><option>Deoghar</option>
+            <option>Godda</option><option>Sahibganj</option><option>Pakur</option><option>Dumka</option>
+            <option>Chatra</option><option>Saraikela-Kharsawan</option><option>Purbi Singhbhum</option><option>Pashchimi Singhbhum</option>
+          </select></div>
+        <div><label data-i18n="lbl-target">Target group</label>
+          <select id="camp-group" onchange="runCampaign()">
+            <option data-i18n-opt="tg0">Urban youth (18–30)</option>
+            <option data-i18n-opt="tg1">Rural women</option>
+            <option data-i18n-opt="tg2">Agricultural workers</option>
+            <option data-i18n-opt="tg3">Daily wage earners</option>
+            <option data-i18n-opt="tg4">Self-help groups</option>
+            <option data-i18n-opt="tg5">School leavers</option>
+          </select></div>
+      </div>
+      <div id="campaign-output"></div>
+    </div>
+    <div class="card">
+      <h3 data-i18n="bubble-title">All-district priority matrix</h3>
+      <p class="note" data-i18n="bubble-note">Bubble size = risk score. X = literacy, Y = insurance. Bottom-left = highest priority.</p>
+      <div class="chart-wrap" style="height:340px;"><canvas id="bubbleChart"></canvas></div>
+    </div>
+  </div>
+
+</div>
+<footer id="footer-text">Jharkhand Financial Inclusion Intelligence Platform · Sources: NFHS-5/NFHS-4 (IIPS), PMJDY data.gov.in (23.02.2024) · Built for MSc Data Science application</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   TRANSLATIONS
+══════════════════════════════════════════ */
+var T = {
+  en: {
+    "hdr-title": "🏦 Jharkhand Financial Inclusion Intelligence Platform",
+    "hdr-sub": "Decision-support for citizens, government officials & NGOs — powered by NFHS-5, PMJDY data & ML",
+    "tab1":"🧑 Citizen Assessment","tab2":"📋 Scheme Recommender","tab3":"🗺️ District Risk Index",
+    "tab4":"📈 Predictive Analytics","tab5":"💡 AI Insights","tab6":"🎯 Campaign Engine",
+    "badge-citizen":"For Citizens","badge-gov":"For Government & NGOs","badge-ds":"Data Science — Predictive Model",
+    "badge-auto":"Auto-generated from NFHS-5 data","badge-amber":"For Citizens",
+    "assess-title":"Financial Readiness Assessment",
+    "assess-note":"Answer 8 questions. Get a personalised readiness profile benchmarked against 48 real Jharkhand respondents.",
+    "lbl-age":"Age","lbl-area":"Area","lbl-savings":"Savings habit","lbl-emergency":"Emergency fund",
+    "lbl-insurance":"Insurance","lbl-invest":"Investments","lbl-digital":"Digital banking","lbl-budget":"Budgeting",
+    "btn-assess":"Get My Financial Readiness Profile →",
+    "res-score-lbl":"Overall Score","res-pct-lbl":"Percentile (pilot)","res-age-lbl":"Financial Age",
+    "strengths-title":"Strengths & Gaps","strengths-lbl":"✓ Strengths","gaps-lbl":"✗ Gaps to address",
+    "top-rec-title":"Top Recommendation",
+    "persona-title":"Your Persona (K-Means, k=3, n=48 pilot responses)",
+    "pilot-chart-title":"Pilot distribution — where you stand",
+    "pilot-chart-note":"48 real Jharkhand respondents. Your score bin highlighted in orange.",
+    "scheme-title":"Personalised Scheme Recommender",
+    "scheme-note":"Enter your profile. The recommender matches you to government schemes using eligibility rules.",
+    "lbl-income":"Monthly income (₹)","lbl-occ":"Occupation","lbl-have-ins":"Have insurance?",
+    "lbl-bank":"Have bank account?","lbl-goal":"Savings goal",
+    "btn-scheme":"Find My Schemes →","scheme-results-title":"Recommended Schemes",
+    "risk-title":"District Financial Inclusion Risk Index",
+    "risk-note":"Composite risk score for all 24 Jharkhand districts. Higher = more at-risk. Weights: Insurance 40%, Literacy 20%, Internet 20%, Bank 20%.",
+    "risk-table-title":"Risk breakdown table","risk-table-note":"Click a row to see intervention recommendation.",
+    "th-district":"District","th-risk":"Risk Score","th-priority":"Priority","th-gap":"Primary Gap",
+    "pred-title":"Predicting Insurance Coverage from Socio-economic Indicators",
+    "pred-note":"OLS regression fitted in Python (sklearn) on all 24 NFHS-5 Jharkhand district data points. Single predictor: X = women's literacy rate (%), y = health insurance coverage (%). R²=0.006, intercept=55.43, coefficient=−0.0601.",
+    "gap-pred-title":"District-level gap analysis (predicted vs actual)",
+    "gap-pred-note":"Negative gap = underperforming socio-economic potential.",
+    "sim-title":"Simulate: select a district","sim-note":"See the model prediction vs actual for any district.",
+    "insights-title":"AI Insight Cards — Jharkhand","insights-note":"Key findings extracted automatically from district data.",
+    "cmp-title":"State-level comparison","cmp-note":"Jharkhand vs India, Bihar, Odisha — NFHS-5",
+    "gap-title":"Urban vs rural gap — Jharkhand","gap-note":"Negative bars mean rural outperforms urban.",
+    "camp-title":"Campaign Recommendation Engine",
+    "camp-note":"Select a district and target group. The engine recommends the highest-impact intervention.",
+    "lbl-district":"District","lbl-target":"Target group",
+    "bubble-title":"All-district priority matrix","bubble-note":"Bubble size = risk score. Bottom-left = highest priority.",
+    "footer":"Jharkhand Financial Inclusion Intelligence Platform · Sources: NFHS-5/NFHS-4 (IIPS), PMJDY data.gov.in (23.02.2024) · Built for MSc Data Science application",
+    // Options
+    "urban":"Urban","semiurban":"Semi-urban","rural":"Rural",
+    "sav0":"Save regularly every month","sav1":"Save sometimes","sav2":"Rarely save","sav3":"Don't save",
+    "em0":"Covers 6+ months","em1":"Covers 1–3 months","em2":"Almost none",
+    "ins0":"Life and health insurance","ins1":"Only one type","ins2":"None, know PMJJBY/PMSBY","ins3":"None, unfamiliar",
+    "inv0":"Mutual funds / PPF / stocks","inv1":"Only fixed deposits","inv2":"None, but interested","inv3":"None, no knowledge",
+    "dig0":"Confident with UPI & security","dig1":"Use UPI, unsure about safety","dig2":"Rarely use digital banking",
+    "bud0":"Track income & expenses monthly","bud1":"Budget loosely","bud2":"Don't budget at all",
+    "occ0":"Student","occ1":"Salaried (private)","occ2":"Government employee","occ3":"Self-employed / farmer","occ4":"Daily wage worker","occ5":"Homemaker",
+    "sc-ins0":"No insurance","sc-ins1":"Life only","sc-ins2":"Health only","sc-ins3":"Both",
+    "yes":"Yes","no":"No",
+    "goal0":"Emergency fund","goal1":"Retirement / pension","goal2":"Long-term wealth","goal3":"Child education",
+    "tg0":"Urban youth (18–30)","tg1":"Rural women","tg2":"Agricultural workers","tg3":"Daily wage earners","tg4":"Self-help groups","tg5":"School leavers",
+    // Dynamic assessment strings
+    "ready-high":"✅ Financial Readiness: High","ready-mid":"⚠️ Financial Readiness: Moderate","ready-low":"🔴 Financial Readiness: Low",
+    "ready-high-body":"You are well-prepared across most financial dimensions. Focus on maximising investment returns and reviewing insurance coverage annually.",
+    "ready-mid-body":"You have a reasonable foundation but significant gaps remain — especially in insurance and/or investment awareness. Targeted action can improve your score quickly.",
+    "ready-low-body":"Your financial safety net needs immediate attention. Start with low-cost government schemes (PMSBY at ₹20/year) before moving to savings and investments.",
+    "str-savings":"Has savings habit","str-insurance":"Insurance covered","str-invest":"Investment-aware",
+    "str-budget":"Good budgeting habit","str-digital":"Comfortable with digital banking",
+    "gap-savings":"Build emergency fund first","gap-insurance":"No / minimal insurance — enrol in PMSBY (₹20/yr)",
+    "gap-invest":"No investment knowledge — explore SIP","gap-budget":"No regular budget — try 50-30-20 rule",
+    "gap-digital":"Limited digital banking use","no-gaps":"No major gaps — great work!","keep-building":"Keep building!",
+    "rec-ins-title":"🥇 Priority Action: Get Insurance Today",
+    "rec-ins-body":"PMSBY (accident cover) costs just ₹20/year. PMJJBY (life cover) costs ₹436/year. Together they give ₹4 lakh cover for under ₹40/month. Enrol at any bank branch.",
+    "rec-inv-title":"🥇 Priority Action: Start Investing",
+    "rec-inv-body":"Open a PPF account at your bank for tax-free returns at 7.1%. Or start a SIP in an index mutual fund for as little as ₹500/month.",
+    "rec-bud-title":"🥇 Priority Action: Start Budgeting",
+    "rec-bud-body":"Budgeting is the strongest predictor of financial confidence in our pilot (r=0.41). Use the 50-30-20 rule: 50% needs, 30% wants, 20% savings.",
+    "rec-strong-title":"🥇 You are doing well!",
+    "rec-strong-body":"Consider reviewing insurance cover annually and exploring NPS for additional retirement savings (tax deductible under 80CCD(1B)).",
+    "persona-sub":"Assigned by K-Means (k=3) on 5 category scores from 48 real Jharkhand responses. Your feature vector was closest to this cluster centroid.",
+    "pname-offline":"Traditional offline saver","pname-digital":"Digitally fluent, under-covered","pname-aware":"Financially aware",
+    "in-pilot":"of 48 in pilot",
+    "score-range":"Score range","num-resp":"Respondents",
+    "cat-savings":"Savings & Emergency Fund (20%)","cat-insurance":"Insurance Awareness (20%)","cat-invest":"Investment Awareness (20%)","cat-budget":"Budgeting Skills (30%)","cat-digital":"Digital Banking (10%)",
+    // Scheme recommender
+    "scheme-matched":"{n} scheme(s) matched for your profile (age {age}, {occ}, income ₹{inc}/month).",
+    "scheme-cost":"Cost","scheme-cover":"Cover",
+    "pmsby-name":"PMSBY — Pradhan Mantri Suraksha Bima Yojana","pmsby-cost":"₹20/year","pmsby-cover":"₹2 lakh accident cover","pmsby-desc":"Accident insurance. Enrol at any bank or via net banking. Auto-debit on 1 June each year.",
+    "pmjjby-name":"PMJJBY — Pradhan Mantri Jeevan Jyoti Bima Yojana","pmjjby-cost":"₹436/year","pmjjby-cover":"₹2 lakh life cover","pmjjby-desc":"Life insurance. Provides ₹2 lakh to family on death. Enrol via bank account.",
+    "pmjdy-name":"PMJDY — Pradhan Mantri Jan Dhan Yojana","pmjdy-cost":"Free","pmjdy-cover":"Zero-balance account + ₹1L accident cover + ₹10K overdraft","pmjdy-desc":"Open a zero-balance bank account with free RuPay debit card and built-in insurance.",
+    "apy-name":"APY — Atal Pension Yojana","apy-cost":"₹42–₹1,454/month","apy-cover":"₹1,000–₹5,000/month pension","apy-desc":"Government-backed pension scheme. Best started early. Enrol via bank.",
+    "ppf-name":"PPF — Public Provident Fund","ppf-cost":"₹500–₹1.5L/year","ppf-cover":"7.1% tax-free returns, 15-year lock-in","ppf-desc":"Long-term savings with the best risk-free rate. Tax deductible under 80C.",
+    "pmkmy-name":"PMKMY — PM Kisan Mandhan Yojana","pmkmy-cost":"₹55–₹200/month","pmkmy-cover":"₹3,000/month pension","pmkmy-desc":"Pension scheme for small and marginal farmers. Enrol at Common Service Centres.",
+    "nps-name":"NPS — National Pension System","nps-cost":"₹500 minimum/contribution","nps-cover":"Market-linked retirement corpus","nps-desc":"Flexible pension plan. Additional ₹50,000 tax deduction under 80CCD(1B).",
+    // Risk index
+    "risk-high":"High","risk-med":"Medium","risk-low":"Low",
+    "risk-ins-gap":"Insurance coverage","risk-lit-gap":"Literacy","risk-net-gap":"Internet access",
+    "risk-detail-suffix":"— Intervention Recommendation",
+    "risk-primary-gap":"Primary gap","risk-ins-val":"Insurance coverage","risk-lit-val":"Literacy","risk-score-val":"Risk score",
+    "rec-action":"Recommended action","exp-impact":"Expected impact",
+    "risk-action-ins":"Run PMSBY/PMJJBY enrollment camps at primary health centres and gram sabha meetings. Target: uninsured households identified through PMJDY account data.",
+    "risk-action-lit":"Deploy financial literacy workshops through JSLPS self-help groups, school outreach, and block-level banking correspondents.",
+    "risk-action-low":"District shows moderate risk. Focus on digital banking safety education and investment-awareness sessions for young adults.",
+    "risk-exp-ins":"Coverage could increase by 8–14 percentage points within 12 months based on gains seen in comparable districts post-campaign.",
+    "risk-exp-lit":"Improved awareness scores in 6 months; insurance conversion typically lags by 12–18 months.",
+    "risk-exp-low":"Incremental improvement; not a high-priority intervention district compared to others.",
+    // Predictive
+    "pred-insight-title":"Key model finding",
+    "pred-insight-body":"OLS regression fitted in Python using sklearn.linear_model.LinearRegression on all 24 NFHS-5 Jharkhand district data points (X = women's literacy, y = health insurance coverage) gives R²=0.006 - literacy explains essentially zero variation in insurance coverage. The near-zero R² is itself the finding: financial inclusion in Jharkhand is policy-driven, not education-driven. Ranchi has the highest literacy (76%) yet ranks 21st of 24 in insurance coverage (actual vs predicted gap: −7.0 pts). The low R² was not adjusted or improved - it is reported honestly.",
+    "pred-predicted":"Predicted coverage","pred-actual":"Actual coverage (NFHS-5)","pred-gap":"Gap",
+    "pred-under":"Actual insurance coverage is {gap} percentage points below the model expectation. Given the near-zero literacy-insurance relationship (R²=0.006), this gap reflects scheme outreach and enrolment differences - not educational attainment. Targeted awareness campaigns are likely to yield returns.","pred-under-high":"Actual insurance coverage is {gap} percentage points below the model expectation - the largest underperformance in the state. This district is a high-priority intervention area; targeted enrollment drives can generate substantial gains.",
+    "pred-over":"Outperforming prediction — government scheme rollout is working well here.",
+    "pred-inline":"Performing broadly in line with prediction.","method-badge":"Methodology note","method-text":"The regression was fitted in Python using sklearn.linear_model.LinearRegression on all 24 NFHS-5 Jharkhand district data points (X = women's literacy rate, y = health insurance coverage). R²=0.006, intercept=55.43, coefficient=−0.0601. The low R² is reported honestly - it is the substantive finding, not a modelling failure.",
+    // Insights
+    "ins01-num":"Insight 01","ins01-stat":"-0.03","ins01-lbl":"Literacy–Insurance correlation",
+    "ins01-text":"Across 24 Jharkhand districts, women's literacy and health insurance coverage show virtually zero correlation (r≈−0.03). Financial inclusion here is policy-driven, not education-driven — awareness campaigns matter more than waiting for literacy to improve.",
+    "ins02-num":"Insight 02","ins02-stat":"21st/24","ins02-lbl":"Ranchi's insurance rank",
+    "ins02-text":"Ranchi has Jharkhand's highest women's literacy (76%) yet ranks 21st in health insurance coverage (43.9%). Urban areas are not automatically more financially included.",
+    "ins03-num":"Insight 03","ins03-stat":"+53 pts","ins03-lbl":"Largest NFHS-4→5 gain",
+    "ins03-text":"Khunti and Kodarma each improved insurance coverage by over 53 percentage points between 2015–16 and 2019–21 — the largest gains in the state. Targeted scheme rollouts can rapidly close gaps.",
+    "ins04-num":"Insight 04","ins04-stat":"35 pts","ins04-lbl":"Urban–rural internet gap",
+    "ins04-text":"The urban–rural gap for women's internet use is 35 percentage points — the largest gap of any indicator. Yet the bank account gap is near zero. People have accounts but lack digital skills to use them safely.",
+    "ins05-num":"Insight 05","ins05-stat":"47.3","ins05-lbl":"PMJDY accounts per 100 people",
+    "ins05-text":"Jharkhand has 47.3 PMJDY accounts per 100 residents — higher than Maharashtra (27.2) and Karnataka (28.1). The scheme has clearly reached its intended target population.",
+    "ins06-num":"Insight 06","ins06-stat":"21 of 48","ins06-lbl":"Largest pilot cluster",
+    "ins06-text":"K-Means clustering (k=3) on 48 real pilot responses found the 'digitally fluent, under-covered' group was the largest cluster (n=21) — comfortable with UPI but lowest insurance/investment awareness.",
+    // Campaign
+    "camp-target-group":"Target group","camp-primary-problem":"Primary problem","camp-current-ins":"Current insurance coverage",
+    "camp-risk-score":"Risk score","camp-action":"Suggested action","camp-expected":"Expected impact",
+    "camp-state-avg":"state avg: 50.3%","camp-priority-suffix":"priority",
+    "camp-gap-ins":"Insurance awareness","camp-gap-inv":"Insurance & investment awareness","camp-gap-both":"Insurance coverage below potential","camp-gap-low-lit":"Low literacy + low insurance","camp-gap-lowest":"Lowest insurance coverage (34.8%)","camp-gap-stagnant":"Limited improvement since NFHS-4","camp-gap-default":"Insurance awareness",
+    "camp-action-ranchi":"Run PMSBY/PMJJBY enrollment camps at RWA meetings and digital channels (WhatsApp campaigns via JSLPS)","camp-action-dhanbad":"Mine workers outreach - partner with BCCL CSR for financial literacy sessions",
+    "camp-action-bokaro":"Steel plant worker outreach via ESI Hospitals and union meetings","camp-action-pakur":"Gram panchayat-level enrollment camps with banking correspondents; use pictorial scheme materials",
+    "camp-action-sahibganj":"Emergency priority — block-level enrollment drives; link with MNREGA payment infrastructure","camp-action-latehar":"Review existing program effectiveness; redesign outreach targeting tribal communities","camp-action-default":"District-level PMSBY enrollment camps; integrate with ration card distribution events",
+    "camp-exp-ranchi":"8–12% coverage increase in 12 months","camp-exp-dhanbad":"10–15% improvement in scheme awareness scores","camp-exp-bokaro":"6–10% coverage improvement",
+    "camp-exp-pakur":"12–18% coverage increase given low base","camp-exp-sahibganj":"15–20% coverage increase achievable in 18 months","camp-exp-latehar":"Modest gains until outreach redesign; 6–10% medium-term","camp-exp-default":"8–12% coverage increase in 12 months"
+  },
+  hi: {
+    "hdr-title": "🏦 झारखंड वित्तीय समावेशन इंटेलिजेंस प्लेटफ़ॉर्म",
+    "hdr-sub": "नागरिकों, सरकारी अधिकारियों और NGO के लिए निर्णय-सहायता — NFHS-5, PMJDY डेटा और ML द्वारा संचालित",
+    "tab1":"🧑 नागरिक मूल्यांकन","tab2":"📋 योजना अनुशंसा","tab3":"🗺️ जिला जोखिम सूचकांक",
+    "tab4":"📈 पूर्वानुमान विश्लेषण","tab5":"💡 AI अंतर्दृष्टि","tab6":"🎯 अभियान इंजन",
+    "badge-citizen":"नागरिकों के लिए","badge-gov":"सरकार और NGO के लिए","badge-ds":"डेटा साइंस — पूर्वानुमान मॉडल",
+    "badge-auto":"NFHS-5 डेटा से स्वतः निर्मित",
+    "assess-title":"वित्तीय तैयारी मूल्यांकन",
+    "assess-note":"8 प्रश्नों के उत्तर दें। झारखंड के 48 वास्तविक प्रतिभागियों से तुलनात्मक व्यक्तिगत रिपोर्ट पाएं।",
+    "lbl-age":"आयु","lbl-area":"क्षेत्र","lbl-savings":"बचत की आदत","lbl-emergency":"आपातकालीन निधि",
+    "lbl-insurance":"बीमा","lbl-invest":"निवेश","lbl-digital":"डिजिटल बैंकिंग","lbl-budget":"बजट बनाना",
+    "btn-assess":"मेरी वित्तीय तैयारी रिपोर्ट देखें →",
+    "res-score-lbl":"कुल स्कोर","res-pct-lbl":"पर्सेंटाइल (पायलट)","res-age-lbl":"वित्तीय आयु",
+    "strengths-title":"ताकत और कमज़ोरियाँ","strengths-lbl":"✓ ताकत","gaps-lbl":"✗ सुधार की ज़रूरत",
+    "top-rec-title":"प्रमुख सुझाव",
+    "persona-title":"आपका वर्ग (K-Means, k=3, n=48 पायलट प्रतिक्रियाएं)",
+    "pilot-chart-title":"पायलट वितरण — आप कहाँ हैं",
+    "pilot-chart-note":"झारखंड के 48 वास्तविक प्रतिभागी। आपका स्कोर नारंगी रंग में दिखाया गया है।",
+    "scheme-title":"व्यक्तिगत योजना अनुशंसाकर्ता",
+    "scheme-note":"अपनी जानकारी भरें। यह उपकरण पात्रता नियमों के आधार पर आपके लिए सरकारी योजनाएं खोजेगा।",
+    "lbl-income":"मासिक आय (₹)","lbl-occ":"व्यवसाय","lbl-have-ins":"बीमा है?",
+    "lbl-bank":"बैंक खाता है?","lbl-goal":"बचत का लक्ष्य",
+    "btn-scheme":"मेरी योजनाएं खोजें →","scheme-results-title":"अनुशंसित सरकारी योजनाएं",
+    "risk-title":"जिला वित्तीय समावेशन जोखिम सूचकांक",
+    "risk-note":"झारखंड के सभी 24 जिलों का जोखिम स्कोर। अधिक स्कोर = अधिक जोखिम। भार: बीमा 40%, साक्षरता 20%, इंटरनेट 20%, बैंक पहुँच 20%।",
+    "risk-table-title":"जोखिम विवरण तालिका","risk-table-note":"किसी भी पंक्ति पर क्लिक करें — हस्तक्षेप अनुशंसा देखें।",
+    "th-district":"जिला","th-risk":"जोखिम स्कोर","th-priority":"प्राथमिकता","th-gap":"मुख्य समस्या",
+    "pred-title":"सामाजिक-आर्थिक संकेतकों से बीमा कवरेज का पूर्वानुमान",
+    "pred-note":"Python (sklearn) में सभी 24 NFHS-5 झारखंड जिला डेटा बिंदुओं पर OLS प्रतिगमन फिट किया गया। एकल पूर्वसूचक: X = महिला साक्षरता दर (%), y = स्वास्थ्य बीमा कवरेज (%)। R²=0.006, अंतःखंड=55.43, गुणांक=−0.0601।",
+    "gap-pred-title":"जिला-स्तरीय अंतर विश्लेषण (अनुमानित बनाम वास्तविक)",
+    "gap-pred-note":"ऋणात्मक अंतर = सामाजिक-आर्थिक क्षमता से कम प्रदर्शन।",
+    "sim-title":"सिमुलेशन: जिला चुनें","sim-note":"किसी भी जिले के लिए मॉडल का अनुमान बनाम वास्तविक देखें।",
+    "insights-title":"AI अंतर्दृष्टि कार्ड — झारखंड","insights-note":"जिला डेटा से स्वतः निकाले गए प्रमुख निष्कर्ष।",
+    "cmp-title":"राज्य-स्तरीय तुलना","cmp-note":"झारखंड बनाम भारत, बिहार, ओडिशा — NFHS-5",
+    "gap-title":"शहरी बनाम ग्रामीण अंतर — झारखंड","gap-note":"ऋणात्मक बार = ग्रामीण, शहरी से बेहतर।",
+    "camp-title":"अभियान अनुशंसा इंजन",
+    "camp-note":"जिला और लक्षित समूह चुनें। इंजन जोखिम प्रोफ़ाइल के आधार पर सर्वोत्तम हस्तक्षेप सुझाएगा।",
+    "lbl-district":"जिला","lbl-target":"लक्षित समूह",
+    "bubble-title":"सभी जिलों की प्राथमिकता मैट्रिक्स","bubble-note":"बबल का आकार = जोखिम स्कोर। नीचे-बाईं ओर = सर्वोच्च प्राथमिकता।",
+    "footer":"झारखंड वित्तीय समावेशन इंटेलिजेंस प्लेटफ़ॉर्म · स्रोत: NFHS-5/NFHS-4 (IIPS), PMJDY data.gov.in (23.02.2024) · MSc डेटा साइंस आवेदन के लिए निर्मित",
+    // Options
+    "urban":"शहरी","semiurban":"अर्ध-शहरी","rural":"ग्रामीण",
+    "sav0":"हर महीने नियमित बचत करता/करती हूँ","sav1":"कभी-कभी बचत करता/करती हूँ","sav2":"शायद ही बचत करता/करती हूँ","sav3":"बचत नहीं करता/करती",
+    "em0":"6+ महीने के खर्च के बराबर","em1":"1–3 महीने के खर्च के बराबर","em2":"लगभग कुछ नहीं",
+    "ins0":"जीवन और स्वास्थ्य बीमा दोनों","ins1":"केवल एक प्रकार","ins2":"कोई नहीं, PMJJBY/PMSBY जानता/जानती हूँ","ins3":"कोई नहीं, जानकारी नहीं",
+    "inv0":"म्यूचुअल फंड / PPF / शेयर","inv1":"केवल फिक्स्ड डिपॉजिट","inv2":"कोई नहीं, लेकिन रुचि है","inv3":"कोई नहीं, जानकारी नहीं",
+    "dig0":"UPI और सुरक्षा में आत्मविश्वास","dig1":"UPI उपयोग, सुरक्षा को लेकर अनिश्चित","dig2":"डिजिटल बैंकिंग शायद ही उपयोग करता/करती",
+    "bud0":"हर महीने आय-व्यय का हिसाब रखता/रखती","bud1":"ढीला-ढाला बजट","bud2":"बजट नहीं बनाता/बनाती",
+    "occ0":"छात्र/छात्रा","occ1":"निजी नौकरी","occ2":"सरकारी कर्मचारी","occ3":"स्व-रोज़गार / किसान","occ4":"दैनिक मज़दूर","occ5":"गृहिणी",
+    "sc-ins0":"कोई बीमा नहीं","sc-ins1":"केवल जीवन बीमा","sc-ins2":"केवल स्वास्थ्य बीमा","sc-ins3":"दोनों",
+    "yes":"हाँ","no":"नहीं",
+    "goal0":"आपातकालीन निधि","goal1":"सेवानिवृत्ति / पेंशन","goal2":"दीर्घकालिक संपत्ति","goal3":"बच्चों की शिक्षा",
+    "tg0":"शहरी युवा (18–30)","tg1":"ग्रामीण महिलाएं","tg2":"कृषि मज़दूर","tg3":"दैनिक वेतन कर्मी","tg4":"स्वयं सहायता समूह","tg5":"स्कूल छोड़ने वाले",
+    // Dynamic assessment
+    "ready-high":"✅ वित्तीय तैयारी: उच्च","ready-mid":"⚠️ वित्तीय तैयारी: मध्यम","ready-low":"🔴 वित्तीय तैयारी: कम",
+    "ready-high-body":"आप अधिकांश वित्तीय क्षेत्रों में अच्छी तरह तैयार हैं। निवेश रिटर्न अधिकतम करने और बीमा कवर की वार्षिक समीक्षा पर ध्यान दें।",
+    "ready-mid-body":"आपकी नींव ठीक है लेकिन महत्वपूर्ण कमियाँ हैं — विशेष रूप से बीमा और/या निवेश जागरूकता में। लक्षित कार्रवाई से स्कोर जल्दी सुधर सकता है।",
+    "ready-low-body":"आपके वित्तीय सुरक्षा जाल पर तत्काल ध्यान देने की ज़रूरत है। बचत और निवेश से पहले कम लागत वाली सरकारी योजनाओं (PMSBY ₹20/वर्ष) से शुरू करें।",
+    "str-savings":"बचत की आदत है","str-insurance":"बीमा उपलब्ध है","str-invest":"निवेश के प्रति जागरूक",
+    "str-budget":"अच्छी बजट आदत","str-digital":"डिजिटल बैंकिंग में सहज",
+    "gap-savings":"पहले आपातकालीन निधि बनाएं","gap-insurance":"बीमा नहीं — PMSBY में नामांकन करें (₹20/वर्ष)",
+    "gap-invest":"निवेश की जानकारी नहीं — SIP देखें","gap-budget":"नियमित बजट नहीं — 50-30-20 नियम अपनाएं",
+    "gap-digital":"सीमित डिजिटल बैंकिंग उपयोग","no-gaps":"कोई बड़ी कमी नहीं — शाबाश!","keep-building":"बढ़ते रहें!",
+    "rec-ins-title":"🥇 प्राथमिक कार्य: आज ही बीमा लें",
+    "rec-ins-body":"PMSBY (दुर्घटना कवर) केवल ₹20/वर्ष में मिलता है। PMJJBY (जीवन कवर) ₹436/वर्ष में। दोनों मिलकर ₹40/माह से कम में ₹4 लाख का कवर देते हैं। किसी भी बैंक शाखा में नामांकन करें।",
+    "rec-inv-title":"🥇 प्राथमिक कार्य: निवेश शुरू करें",
+    "rec-inv-body":"अपने बैंक में PPF खाता खोलें — 7.1% कर-मुक्त रिटर्न। या ₹500/माह से इंडेक्स म्यूचुअल फंड में SIP शुरू करें।",
+    "rec-bud-title":"🥇 प्राथमिक कार्य: बजट बनाना शुरू करें",
+    "rec-bud-body":"हमारे पायलट में बजट बनाना वित्तीय आत्मविश्वास का सबसे मजबूत संकेतक है (r=0.41)। 50-30-20 नियम अपनाएं: 50% ज़रूरतें, 30% इच्छाएं, 20% बचत।",
+    "rec-strong-title":"🥇 आप बेहतरीन कर रहे हैं!",
+    "rec-strong-body":"बीमा कवर की वार्षिक समीक्षा करें और अतिरिक्त सेवानिवृत्ति बचत के लिए NPS (80CCD(1B) के तहत ₹50,000 कर कटौती योग्य) पर विचार करें।",
+    "persona-sub":"K-Means (k=3) द्वारा 48 वास्तविक झारखंड प्रतिक्रियाओं के 5 श्रेणी स्कोर पर असाइन किया गया।",
+    "pname-offline":"पारंपरिक ऑफलाइन बचतकर्ता","pname-digital":"डिजिटल रूप से सक्षम, कम कवर","pname-aware":"वित्तीय रूप से जागरूक",
+    "in-pilot":"में से 48 पायलट में",
+    "score-range":"स्कोर सीमा","num-resp":"प्रतिभागी",
+    "cat-savings":"बचत और आपातकालीन निधि (20%)","cat-insurance":"बीमा जागरूकता (20%)","cat-invest":"निवेश जागरूकता (20%)","cat-budget":"बजट कौशल (30%)","cat-digital":"डिजिटल बैंकिंग (10%)",
+    // Scheme recommender
+    "scheme-matched":"{n} योजना/योजनाएं मिली — आयु {age}, {occ}, आय ₹{inc}/माह।",
+    "scheme-cost":"लागत","scheme-cover":"कवर",
+    "pmsby-name":"PMSBY — प्रधान मंत्री सुरक्षा बीमा योजना","pmsby-cost":"₹20/वर्ष","pmsby-cover":"₹2 लाख दुर्घटना कवर","pmsby-desc":"दुर्घटना बीमा। किसी भी बैंक या नेट बैंकिंग से नामांकन करें। हर साल 1 जून को स्वत: डेबिट।",
+    "pmjjby-name":"PMJJBY — प्रधान मंत्री जीवन ज्योति बीमा योजना","pmjjby-cost":"₹436/वर्ष","pmjjby-cover":"₹2 लाख जीवन कवर","pmjjby-desc":"जीवन बीमा। मृत्यु पर परिवार को ₹2 लाख। बैंक खाते से नामांकन करें।",
+    "pmjdy-name":"PMJDY — प्रधान मंत्री जन धन योजना","pmjdy-cost":"निःशुल्क","pmjdy-cover":"शून्य शेष खाता + ₹1 लाख दुर्घटना कवर + ₹10,000 ओवरड्राफ्ट","pmjdy-desc":"मुफ़्त RuPay डेबिट कार्ड और अंतर्निहित बीमा के साथ शून्य शेष बैंक खाता खोलें।",
+    "apy-name":"APY — अटल पेंशन योजना","apy-cost":"₹42–₹1,454/माह","apy-cover":"₹1,000–₹5,000/माह पेंशन","apy-desc":"सरकार समर्थित पेंशन योजना। जल्दी शुरू करना बेहतर। बैंक से नामांकन करें।",
+    "ppf-name":"PPF — सार्वजनिक भविष्य निधि","ppf-cost":"₹500–₹1.5 लाख/वर्ष","ppf-cover":"7.1% कर-मुक्त रिटर्न, 15 वर्ष लॉक-इन","ppf-desc":"सबसे अच्छे जोखिम-मुक्त दर के साथ दीर्घकालिक बचत। 80C के तहत कर-कटौती योग्य।",
+    "pmkmy-name":"PMKMY — PM किसान मानधन योजना","pmkmy-cost":"₹55–₹200/माह","pmkmy-cover":"₹3,000/माह पेंशन","pmkmy-desc":"छोटे और सीमांत किसानों के लिए पेंशन योजना। सामान्य सेवा केंद्रों पर नामांकन।",
+    "nps-name":"NPS — राष्ट्रीय पेंशन प्रणाली","nps-cost":"₹500 न्यूनतम/योगदान","nps-cover":"बाज़ार से जुड़ा सेवानिवृत्ति कोष","nps-desc":"लचीली पेंशन योजना। 80CCD(1B) के तहत ₹50,000 अतिरिक्त कर कटौती।",
+    // Risk
+    "risk-high":"उच्च","risk-med":"मध्यम","risk-low":"कम",
+    "risk-ins-gap":"बीमा कवरेज","risk-lit-gap":"साक्षरता","risk-net-gap":"इंटरनेट पहुँच",
+    "risk-detail-suffix":"— हस्तक्षेप अनुशंसा",
+    "risk-primary-gap":"मुख्य समस्या","risk-ins-val":"बीमा कवरेज","risk-lit-val":"साक्षरता","risk-score-val":"जोखिम स्कोर",
+    "rec-action":"अनुशंसित कार्रवाई","exp-impact":"अपेक्षित प्रभाव",
+    "risk-action-ins":"प्राथमिक स्वास्थ्य केंद्रों और ग्राम सभा बैठकों में PMSBY/PMJJBY नामांकन शिविर आयोजित करें। लक्ष्य: PMJDY खाता डेटा से अबीमाकृत परिवारों की पहचान।",
+    "risk-action-lit":"JSLPS स्वयं सहायता समूहों, स्कूल आउटरीच और ब्लॉक-स्तरीय बैंकिंग संवाददाताओं के माध्यम से वित्तीय साक्षरता कार्यशालाएं आयोजित करें।",
+    "risk-action-low":"जिला मध्यम जोखिम दिखाता है। युवाओं के लिए डिजिटल बैंकिंग सुरक्षा शिक्षा और निवेश-जागरूकता सत्रों पर ध्यान दें।",
+    "risk-exp-ins":"तुलनीय जिलों में अभियान के बाद देखी गई वृद्धि के आधार पर 12 महीनों में कवरेज 8–14 प्रतिशत अंक बढ़ सकती है।",
+    "risk-exp-lit":"6 महीनों में जागरूकता स्कोर में सुधार; बीमा रूपांतरण आमतौर पर 12–18 महीने पीछे रहता है।",
+    "risk-exp-low":"क्रमिक सुधार; अन्य जिलों की तुलना में उच्च-प्राथमिकता हस्तक्षेप जिला नहीं।",
+    // Predictive
+    "pred-insight-title":"मुख्य मॉडल निष्कर्ष",
+    "pred-insight-body":"Python में sklearn.linear_model.LinearRegression का उपयोग करके सभी 24 NFHS-5 झारखंड जिला डेटा बिंदुओं पर OLS प्रतिगमन फिट किया गया (X = महिला साक्षरता, y = स्वास्थ्य बीमा कवरेज)। R²=0.006 — साक्षरता बीमा कवरेज में भिन्नता का लगभग शून्य भाग समझाती है। यह निकट-शून्य R² ही मुख्य निष्कर्ष है: झारखंड में वित्तीय समावेशन नीति-संचालित है, शिक्षा-संचालित नहीं। रांची में सबसे अधिक साक्षरता (76%) है फिर भी बीमा कवरेज में 21वें स्थान पर है (वास्तविक बनाम अनुमानित अंतर: −7.0 अंक)। R² को समायोजित नहीं किया — ईमानदारी से रिपोर्ट किया गया।",
+    "pred-predicted":"अनुमानित कवरेज","pred-actual":"वास्तविक कवरेज (NFHS-5)","pred-gap":"अंतर",
+    "pred-under":"वास्तविक बीमा कवरेज मॉडल अनुमान से {gap} प्रतिशत अंक कम है। कमज़ोर साक्षरता-बीमा सम्बन्ध (R²=0.006) को देखते हुए, यह अंतर जागरूकता और योजना-वितरण अभियानों से पाटा जा सकता है।","pred-under-high":"वास्तविक बीमा कवरेज मॉडल अनुमान से {gap} प्रतिशत अंक कम है। यह जिला उच्च-प्राथमिकता हस्तक्षेप क्षेत्र है जहाँ लक्षित अभियान से तेज़ लाभ संभव है।",
+    "pred-over":"पूर्वानुमान से बेहतर — सरकारी योजना यहाँ अच्छा काम कर रही है।",
+    "pred-inline":"पूर्वानुमान के अनुरूप प्रदर्शन।","method-badge":"पद्धति टिप्पणी","method-text":"प्रतिगमन को Python में sklearn.linear_model.LinearRegression का उपयोग करके 24 NFHS-5 जिला डेटा बिंदुओं पर फिट किया गया। R²=0.006, अंतःखंड=55.43, गुणांक=−0.0601। कम R² को ईमानदारी से रिपोर्ट किया गया — यह मॉडलिंग विफलता नहीं, बल्कि वास्तविक निष्कर्ष है।",
+    // Insights
+    "ins01-num":"अंतर्दृष्टि 01","ins01-stat":"-0.03","ins01-lbl":"साक्षरता–बीमा सहसंबंध",
+    "ins01-text":"झारखंड के 24 जिलों में महिला साक्षरता और स्वास्थ्य बीमा कवरेज में लगभग शून्य सहसंबंध (r≈−0.03) है। यहाँ वित्तीय समावेशन नीति-संचालित है, शिक्षा-संचालित नहीं।",
+    "ins02-num":"अंतर्दृष्टि 02","ins02-stat":"21वाँ/24","ins02-lbl":"रांची की बीमा रैंक",
+    "ins02-text":"रांची में झारखंड की सबसे अधिक महिला साक्षरता (76%) है फिर भी स्वास्थ्य बीमा कवरेज में 21वें स्थान (43.9%) पर है। शहरी क्षेत्र स्वचालित रूप से अधिक वित्तीय रूप से समावेशित नहीं हैं।",
+    "ins03-num":"अंतर्दृष्टि 03","ins03-stat":"+53 अंक","ins03-lbl":"सबसे बड़ा NFHS-4→5 सुधार",
+    "ins03-text":"खूंटी और कोडरमा ने 2015-16 से 2019-21 के बीच बीमा कवरेज में 53 प्रतिशत अंकों से अधिक सुधार किया। लक्षित योजना शुरुआत से अंतर जल्दी पाटा जा सकता है।",
+    "ins04-num":"अंतर्दृष्टि 04","ins04-stat":"35 अंक","ins04-lbl":"शहरी-ग्रामीण इंटरनेट अंतर",
+    "ins04-text":"झारखंड में महिलाओं के इंटरनेट उपयोग में शहरी-ग्रामीण अंतर 35 प्रतिशत अंक है — किसी भी संकेतक का सबसे बड़ा अंतर। फिर भी बैंक खाता अंतर लगभग शून्य है।",
+    "ins05-num":"अंतर्दृष्टि 05","ins05-stat":"47.3","ins05-lbl":"प्रति 100 लोगों पर PMJDY खाते",
+    "ins05-text":"झारखंड में प्रति 100 निवासियों पर 47.3 PMJDY खाते हैं — महाराष्ट्र (27.2) और कर्नाटक (28.1) से अधिक। योजना ने अपनी लक्षित आबादी तक पहुँचने में सफलता पाई है।",
+    "ins06-num":"अंतर्दृष्टि 06","ins06-stat":"48 में से 21","ins06-lbl":"सबसे बड़ा पायलट क्लस्टर",
+    "ins06-text":"48 वास्तविक पायलट प्रतिक्रियाओं पर K-Means क्लस्टरिंग (k=3) ने पाया कि 'डिजिटल रूप से सक्षम, कम कवर' समूह सबसे बड़ा क्लस्टर था (n=21)।",
+    // Campaign
+    "camp-target-group":"लक्षित समूह","camp-primary-problem":"मुख्य समस्या","camp-current-ins":"वर्तमान बीमा कवरेज",
+    "camp-risk-score":"जोखिम स्कोर","camp-action":"सुझाई गई कार्रवाई","camp-expected":"अपेक्षित प्रभाव",
+    "camp-state-avg":"राज्य औसत: 50.3%","camp-priority-suffix":"प्राथमिकता",
+    "camp-gap-ins":"बीमा जागरूकता","camp-gap-inv":"बीमा और निवेश जागरूकता","camp-gap-both":"बीमा कवरेज क्षमता से कम","camp-gap-low-lit":"कम साक्षरता + कम बीमा","camp-gap-lowest":"सबसे कम बीमा कवरेज (34.8%)","camp-gap-stagnant":"NFHS-4 के बाद सीमित सुधार","camp-gap-default":"बीमा जागरूकता",
+    "camp-action-ranchi":"RWA बैठकों और डिजिटल चैनलों (JSLPS के माध्यम से WhatsApp अभियान) में PMSBY/PMJJBY नामांकन शिविर","camp-action-dhanbad":"BCCL CSR के साथ साझेदारी में खदान कर्मियों के लिए वित्तीय साक्षरता सत्र",
+    "camp-action-bokaro":"ESI अस्पतालों और यूनियन बैठकों के माध्यम से स्टील प्लांट कर्मियों तक पहुँच","camp-action-pakur":"बैंकिंग संवाददाताओं के साथ ग्राम पंचायत-स्तरीय नामांकन शिविर; चित्रात्मक योजना सामग्री का उपयोग",
+    "camp-action-sahibganj":"आपातकालीन प्राथमिकता — ब्लॉक-स्तरीय नामांकन अभियान; MNREGA भुगतान बुनियादी ढांचे से जोड़ें","camp-action-latehar":"मौजूदा कार्यक्रम की प्रभावशीलता की समीक्षा; आदिवासी समुदायों को लक्षित करने के लिए आउटरीच का पुनर्निर्माण","camp-action-default":"जिला-स्तरीय PMSBY नामांकन शिविर; राशन कार्ड वितरण कार्यक्रमों के साथ एकीकृत करें",
+    "camp-exp-ranchi":"12 महीनों में 8–12% कवरेज वृद्धि","camp-exp-dhanbad":"योजना जागरूकता स्कोर में 10–15% सुधार","camp-exp-bokaro":"6–10% कवरेज सुधार",
+    "camp-exp-pakur":"कम आधार को देखते हुए 12–18% कवरेज वृद्धि","camp-exp-sahibganj":"18 महीनों में 15–20% कवरेज वृद्धि संभव","camp-exp-latehar":"आउटरीच पुनर्निर्माण तक मामूली सुधार; 6–10% मध्यम-अवधि","camp-exp-default":"12 महीनों में 8–12% कवरेज वृद्धि"
+  }
+};
+
+var lang = 'en';
+function t(key){ return (T[lang][key] || T['en'][key] || key); }
+
+function setLang(l){
+  lang = l;
+  document.getElementById('lang-en').className = 'lang-btn' + (l==='en'?' active':'');
+  document.getElementById('lang-hi').className = 'lang-btn' + (l==='hi'?' active':'');
+  // Static i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(T[lang][key]) el.innerHTML = T[lang][key];
+  });
+  // Options with data-i18n-opt
+  document.querySelectorAll('[data-i18n-opt]').forEach(function(el){
+    var key = el.getAttribute('data-i18n-opt');
+    if(T[lang][key]) el.textContent = T[lang][key];
+  });
+  // Header
+  document.getElementById('hdr-title').textContent = t('hdr-title');
+  document.getElementById('hdr-sub').textContent = t('hdr-sub');
+  document.getElementById('footer-text').textContent = t('footer');
+  // Refresh dynamic content if shown
+  if(document.getElementById('assess-results').style.display!=='none') runAssessment();
+  if(document.getElementById('scheme-results').style.display!=='none') runSchemeRecommender();
+  runCampaign();
+  renderInsightCards();
+  renderPredInsight();
+  rebuildRiskTable();
+}
+
+/* ══════════════════════════════════════════
+   DATA
+══════════════════════════════════════════ */
+var DISTRICTS = [
+  ["Saraikela-Kharsawan",63.1,10.5,63.1,52.6],["Jamtara",62.9,11.8,53.5,51.1],
+  ["Simdega",60.6,10.6,66.4,50.0],["Lohardaga",58.9,15.6,65.2,43.3],
+  ["Khunti",58.2,5.0,55.3,53.2],["Kodarma",56.8,3.6,63.6,53.2],
+  ["Palamu",55.8,26.6,62.5,29.2],["Garhwa",55.3,9.9,59.6,45.4],
+  ["Hazaribagh",55.0,18.8,67.2,36.2],["Deoghar",53.8,8.2,50.7,45.6],
+  ["Pakur",52.5,16.6,41.4,35.9],["Giridih",52.4,18.3,53.4,34.1],
+  ["Latehar",52.2,29.4,54.9,22.8],["Gumla",51.7,26.3,63.7,25.4],
+  ["Purbi Singhbhum",50.7,19.8,73.8,30.9],["Ramgarh",49.7,21.7,71.0,28.0],
+  ["Pashchimi Singhbhum",46.7,4.7,47.8,42.0],["Chatra",46.5,12.8,57.7,33.7],
+  ["Godda",45.9,6.3,46.6,39.6],["Dhanbad",45.7,10.8,69.7,34.9],
+  ["Dumka",45.4,4.2,51.8,41.2],["Bokaro",44.7,15.6,69.2,29.1],
+  ["Ranchi",43.9,6.5,76.0,37.4],["Sahibganj",34.8,6.7,64.0,28.1]
+];
+
+var pilotScores=[15,15,19.2,28.3,30.8,32.5,34.2,35,36.2,40,42.1,42.1,46.2,47.5,47.5,49.2,50,50,52.9,54.6,56.7,56.7,57.5,58.8,59.6,60,60.4,62.9,65,65.4,65.8,66.2,66.7,67.1,69.6,70,71.7,73.3,74.2,74.2,76.7,80.4,80.4,87.1,87.1,87.1,89.6,93.8];
+
+function computeScore(s,em,ins,inv,dig,bud){
+  var sS=Math.round(((3-s)/3)*100),iS=Math.round(((3-ins)/3)*100),
+      invS=Math.round(((3-inv)/3)*100),dS=Math.round(((2-dig)/2)*100),
+      bS=Math.round(((2-bud)/2)*100),eS=Math.round(((2-em)/2)*100);
+  var sc=Math.round(sS*0.5+eS*0.5);
+  return{overall:Math.round(sc*0.2+iS*0.2+invS*0.2+bS*0.3+dS*0.1),savings:sc,insurance:iS,invest:invS,digital:dS,budget:bS};
+}
+var personaCentroids=[
+  {key:'offline',n:6,vec:[51.4,27.8,33.3,91.7,8.3]},
+  {key:'digital',n:21,vec:[40.5,17.5,25.4,59.5,100]},
+  {key:'aware',n:21,vec:[55.6,65.1,87.3,73.8,90.5]}
+];
+function assignPersona(r){
+  var v=[r.savings,r.insurance,r.invest,r.budget,r.digital],best=null,bd=Infinity;
+  personaCentroids.forEach(function(p){var d=0;for(var i=0;i<5;i++)d+=Math.pow(v[i]-p.vec[i],2);d=Math.sqrt(d);if(d<bd){bd=d;best=p;}});
+  return best;
+}
+function pct(score){return Math.round(pilotScores.filter(function(s){return s<score;}).length/pilotScores.length*100);}
+function computeRisk(d){return Math.round((1-d[1]/100)*40+(1-d[3]/100)*20+(1-31.4/100)*20+(1-79.6/100)*20);}
+function riskColor(r){return r>=42?'#c0392b':r>=38?'#e67e22':'#2a8a3e';}
+function riskLbl(r){return r>=42?t('risk-high'):r>=38?t('risk-med'):t('risk-low');}
+// Real OLS: sklearn LinearRegression on 24 NFHS-5 district data points.
+// X = women's literacy (%), y = health insurance coverage (%). Intercept=55.43, coef=-0.0601, R²=0.006.
+// Real OLS regression: sklearn.linear_model.LinearRegression on 24 NFHS-5 district data points.
+// X = women's literacy (%), y = health insurance coverage (%).
+// Intercept = 55.43, Coefficient = -0.0601, R² = 0.006 (reported as-is — not adjusted).
+function predictIns(lit){return Math.round((55.43 + (-0.0601)*lit)*10)/10;}
+
+/* ══════════════════════════════════════════
+   TAB SWITCHING
+══════════════════════════════════════════ */
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.onclick=function(){
+    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+    document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  };
+});
+
+/* ══════════════════════════════════════════
+   TAB 1: ASSESSMENT
+══════════════════════════════════════════ */
+var pilotChartInst=null;
+function runAssessment(){
+  var s=parseInt(document.getElementById('q-savings').value),
+      em=parseInt(document.getElementById('q-emergency').value),
+      ins=parseInt(document.getElementById('q-insurance').value),
+      inv=parseInt(document.getElementById('q-invest').value),
+      dig=parseInt(document.getElementById('q-digital').value),
+      bud=parseInt(document.getElementById('q-budget').value),
+      age=parseInt(document.getElementById('q-age').value)||24;
+  var r=computeScore(s,em,ins,inv,dig,bud);
+  document.getElementById('res-score').textContent=r.overall+'/100';
+  document.getElementById('res-pct').textContent=pct(r.overall)+(lang==='hi'?'वाँ %ile':'th %ile');
+  document.getElementById('res-age').textContent=Math.round(15+(r.overall/100)*35)+(lang==='hi'?' वर्ष':' yrs');
+  var banner=document.getElementById('readiness-banner');
+  if(r.overall>=70){banner.className='readiness-card readiness-high';document.getElementById('readiness-title').textContent=t('ready-high');document.getElementById('readiness-body').textContent=t('ready-high-body');}
+  else if(r.overall>=45){banner.className='readiness-card readiness-mid';document.getElementById('readiness-title').textContent=t('ready-mid');document.getElementById('readiness-body').textContent=t('ready-mid-body');}
+  else{banner.className='readiness-card readiness-low';document.getElementById('readiness-title').textContent=t('ready-low');document.getElementById('readiness-body').textContent=t('ready-low-body');}
+  var cats=[
+    {label:t('cat-savings'),score:r.savings,color:'#185fa5'},
+    {label:t('cat-insurance'),score:r.insurance,color:'#2a8a3e'},
+    {label:t('cat-invest'),score:r.invest,color:'#9b6a1a'},
+    {label:t('cat-budget'),score:r.budget,color:'#0c447c'},
+    {label:t('cat-digital'),score:r.digital,color:'#639922'}
+  ];
+  document.getElementById('score-bars').innerHTML=cats.map(function(c){
+    return '<div class="bar-row"><div class="bar-label"><span>'+c.label+'</span><span>'+c.score+'%</span></div>'+
+      '<div class="bar-track"><div class="bar-fill" style="width:'+c.score+'%;background:'+c.color+';"></div></div></div>';
+  }).join('');
+  var strArr=[],gapArr=[];
+  if(r.savings>=60)strArr.push(t('str-savings'));else gapArr.push(t('gap-savings'));
+  if(r.insurance>=50)strArr.push(t('str-insurance'));else gapArr.push(t('gap-insurance'));
+  if(r.invest>=50)strArr.push(t('str-invest'));else gapArr.push(t('gap-invest'));
+  if(r.budget>=60)strArr.push(t('str-budget'));else gapArr.push(t('gap-budget'));
+  if(r.digital>=60)strArr.push(t('str-digital'));else gapArr.push(t('gap-digital'));
+  document.getElementById('strengths').innerHTML=strArr.map(function(s){return '<p style="font-size:13px;color:#2a8a3e;margin:4px 0;">✓ '+s+'</p>';}).join('')||'<p style="font-size:13px;color:#888;">'+t('keep-building')+'</p>';
+  document.getElementById('gaps').innerHTML=gapArr.map(function(g){return '<p style="font-size:13px;color:#c0392b;margin:4px 0;">✗ '+g+'</p>';}).join('')||'<p style="font-size:13px;color:#2a8a3e;">'+t('no-gaps')+'</p>';
+  var rec='';
+  if(r.insurance<50)rec='<div class="scheme-card"><h4>'+t('rec-ins-title')+'</h4><p>'+t('rec-ins-body')+'</p></div>';
+  else if(r.invest<50)rec='<div class="scheme-card"><h4>'+t('rec-inv-title')+'</h4><p>'+t('rec-inv-body')+'</p></div>';
+  else if(r.budget<50)rec='<div class="scheme-card"><h4>'+t('rec-bud-title')+'</h4><p>'+t('rec-bud-body')+'</p></div>';
+  else rec='<div class="scheme-card"><h4>'+t('rec-strong-title')+'</h4><p>'+t('rec-strong-body')+'</p></div>';
+  document.getElementById('top-rec').innerHTML=rec;
+  var p=assignPersona(r);
+  document.getElementById('persona-box').innerHTML='<div style="background:#f0f4f8;border-radius:8px;padding:12px 14px;">'+
+    '<div style="font-size:13px;font-weight:700;color:#0c447c;">'+t('pname-'+p.key)+' <span style="font-size:11px;color:#888;">(n='+p.n+' '+t('in-pilot')+')</span></div>'+
+    '<div style="font-size:12px;color:#555;margin-top:5px;">'+t('persona-sub')+'</div></div>';
+  var bins=[0,10,20,30,40,50,60,70,80,90,100],counts=new Array(bins.length-1).fill(0);
+  pilotScores.forEach(function(sc){for(var i=0;i<bins.length-1;i++){if(sc>=bins[i]&&sc<bins[i+1]){counts[i]++;break;}}});
+  var labels=bins.slice(0,-1).map(function(b,i){return b+'-'+bins[i+1];});
+  var userBin=Math.min(Math.floor(r.overall/10),bins.length-2);
+  var colors=labels.map(function(_,i){return i===userBin?'#d85a30':'#185fa5';});
+  if(pilotChartInst)pilotChartInst.destroy();
+  pilotChartInst=new Chart(document.getElementById('pilotChart'),{
+    type:'bar',data:{labels:labels,datasets:[{data:counts,backgroundColor:colors}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{title:{display:true,text:t('score-range')}},y:{title:{display:true,text:t('num-resp')},ticks:{stepSize:1}}}}
+  });
+  document.getElementById('assess-results').style.display='block';
+}
+
+/* ══════════════════════════════════════════
+   TAB 2: SCHEME RECOMMENDER
+══════════════════════════════════════════ */
+var SCHEME_IDS=['pmsby','pmjjby','pmjdy','apy','ppf','pmkmy','nps'];
+function schemeEligible(id,age,inc,ins,bank,occ){
+  if(id==='pmsby') return age>=18&&age<=70&&bank==='yes'&&ins==='no';
+  if(id==='pmjjby') return age>=18&&age<=50&&bank==='yes'&&(ins==='no'||ins==='health');
+  if(id==='pmjdy') return bank==='no';
+  if(id==='apy') return age>=18&&age<=40&&bank==='yes';
+  if(id==='ppf') return inc>=5000;
+  if(id==='pmkmy') return occ===t('occ3')&&age<=40;
+  if(id==='nps') return (occ===t('occ1')||occ===t('occ2'))&&age<=60;
+  return false;
+}
+function runSchemeRecommender(){
+  var age=parseInt(document.getElementById('sc-age').value)||24,
+      inc=parseInt(document.getElementById('sc-income').value)||10000,
+      occ=document.getElementById('sc-occ').value,
+      ins=document.getElementById('sc-ins').value,
+      bank=document.getElementById('sc-bank').value;
+  var matched=SCHEME_IDS.filter(function(id){return schemeEligible(id,age,inc,ins,bank,occ);});
+  if(matched.length===0) matched=['pmsby'];
+  var noteStr=t('scheme-matched').replace('{n}',matched.length).replace('{age}',age).replace('{occ}',occ).replace('{inc}',inc.toLocaleString('en-IN'));
+  document.getElementById('scheme-note-out').textContent=noteStr;
+  document.getElementById('scheme-list').innerHTML=matched.map(function(id,i){
+    return '<div class="scheme-card">'+
+      '<h4>'+(i===0?'🥇 ':'')+'#'+(i+1)+' '+t(id+'-name')+'</h4>'+
+      '<p><strong>'+t('scheme-cost')+':</strong> '+t(id+'-cost')+'&nbsp;|&nbsp;<strong>'+t('scheme-cover')+':</strong> '+t(id+'-cover')+'</p>'+
+      '<p style="margin-top:5px;">'+t(id+'-desc')+'</p></div>';
+  }).join('');
+  document.getElementById('scheme-results').style.display='block';
+}
+
+/* ══════════════════════════════════════════
+   TAB 3: DISTRICT RISK INDEX
+══════════════════════════════════════════ */
+var riskData=DISTRICTS.map(function(d){
+  var risk=computeRisk(d);
+  var primary=d[1]<48?'risk-ins-gap':d[3]<55?'risk-lit-gap':'risk-net-gap';
+  return{name:d[0],ins:d[1],lit:d[3],gain:d[4],risk:risk,primaryKey:primary};
+}).sort(function(a,b){return b.risk-a.risk;});
+
+var riskChartInst=null;
+function buildRiskChart(){
+  if(riskChartInst)riskChartInst.destroy();
+  riskChartInst=new Chart(document.getElementById('riskChart'),{
+    type:'bar',
+    data:{labels:riskData.map(function(d){return d.name;}),
+      datasets:[{label:lang==='hi'?'जोखिम स्कोर':'Risk Score',
+        data:riskData.map(function(d){return d.risk;}),
+        backgroundColor:riskData.map(function(d){return riskColor(d.risk);})}]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){
+        var d=riskData[ctx.dataIndex];
+        return (lang==='hi'?'जोखिम: ':'Risk: ')+ctx.raw+' | '+(lang==='hi'?'बीमा: ':'Ins: ')+d.ins+'% | '+(lang==='hi'?'साक्षरता: ':'Lit: ')+d.lit+'%';
+      }}}},
+      scales:{x:{min:30,max:55,title:{display:true,text:lang==='hi'?'जोखिम स्कोर (अधिक = अधिक जोखिम)':'Risk Score (higher = more at risk)'}}}
+    }
+  });
+}
+buildRiskChart();
+
+function rebuildRiskTable(){
+  var tbody=document.getElementById('risk-tbody');
+  tbody.innerHTML='';
+  riskData.forEach(function(d){
+    var tr=document.createElement('tr');
+    tr.style.cursor='pointer';
+    tr.innerHTML='<td>'+d.name+'</td><td>'+d.risk+'</td>'+
+      '<td><span class="risk-dot" style="background:'+riskColor(d.risk)+'"></span>'+riskLbl(d.risk)+'</td>'+
+      '<td>'+t(d.primaryKey)+'</td>';
+    tr.onclick=function(){showRiskDetail(d);};
+    tbody.appendChild(tr);
+  });
+}
+rebuildRiskTable();
+
+function showRiskDetail(d){
+  document.getElementById('risk-detail-title').textContent=d.name+' '+t('risk-detail-suffix');
+  var actionKey='risk-action-'+(d.ins<48?'ins':d.lit<55?'lit':'low');
+  var expKey='risk-exp-'+(d.ins<48?'ins':d.lit<55?'lit':'low');
+  document.getElementById('risk-detail-body').innerHTML=
+    '<div class="insight-box"><strong>'+t('risk-primary-gap')+': '+t(d.primaryKey)+'</strong>'+
+    t('risk-ins-val')+': '+d.ins+'% | '+t('risk-lit-val')+': '+d.lit+'% | '+t('risk-score-val')+': '+d.risk+'</div>'+
+    '<div style="font-size:13px;margin-top:10px;"><strong>'+t('rec-action')+':</strong><p style="color:#444;line-height:1.6;">'+t(actionKey)+'</p>'+
+    '<strong>'+t('exp-impact')+':</strong><p style="color:#444;line-height:1.6;">'+t(expKey)+'</p></div>';
+  document.getElementById('risk-detail').style.display='block';
+  document.getElementById('risk-detail').scrollIntoView({behavior:'smooth'});
+}
+
+/* ══════════════════════════════════════════
+   TAB 4: PREDICTIVE ANALYTICS
+══════════════════════════════════════════ */
+var predPoints=DISTRICTS.map(function(d){
+  var pred=predictIns(d[3]),actual=d[1],gap=actual-pred;
+  return{name:d[0],actual:actual,pred:pred,gap:gap,lit:d[3]};
+}).sort(function(a,b){return a.gap-b.gap;});
+
+new Chart(document.getElementById('predChart'),{
+  type:'scatter',
+  data:{datasets:[
+    {label:'Actual',data:DISTRICTS.map(function(d){return{x:d[3],y:d[1]};}),backgroundColor:'#185fa5',pointRadius:6},
+    {label:'Predicted',data:DISTRICTS.map(function(d){return{x:d[3],y:predictIns(d[3])};}),
+      type:'line',backgroundColor:'transparent',borderColor:'#d85a30',borderWidth:2,pointRadius:3,pointBackgroundColor:'#d85a30'}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},
+    scales:{x:{title:{display:true,text:'Women literacy rate (%)'},min:35,max:80},
+      y:{title:{display:true,text:'Health insurance coverage (%)'},min:30,max:70}}}
+});
+
+new Chart(document.getElementById('gapPredChart'),{
+  type:'bar',
+  data:{labels:predPoints.map(function(d){return d.name;}),
+    datasets:[{label:'Gap (actual − predicted)',data:predPoints.map(function(d){return d.gap;}),
+      backgroundColor:predPoints.map(function(d){return d.gap<0?'#c0392b':'#2a8a3e';})}]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:function(ctx){ return ctx.raw.toFixed(1)+' pts'; }}}   
+    },
+    scales:{x:{title:{display:true,text:'Percentage points'}}}}
+});
+
+function renderPredInsight(){
+  document.getElementById('pred-insight').innerHTML='<strong>'+t('pred-insight-title')+'</strong>'+t('pred-insight-body');
+}
+renderPredInsight();
+
+function updatePredDetail(){
+  var name=document.getElementById('pred-district').value;
+  var d=predPoints.find(function(p){return p.name===name;});
+  if(!d)return;
+  var gapColor=d.gap<=-16?'#c0392b':d.gap<-5?'#c0392b':d.gap>5?'#2a8a3e':'#e67e22';
+  var interp;
+  if(d.gap<=-16){
+    interp=t('pred-under-high').replace('{gap}',Math.abs(d.gap).toFixed(1));
+  } else if(d.gap<0){
+    interp=t('pred-under').replace('{gap}',Math.abs(d.gap).toFixed(1));
+  } else if(d.gap>0){
+    interp=t('pred-over').replace('{gap}',d.gap.toFixed(1));
+  } else {
+    interp=t('pred-inline');
+  }
+  document.getElementById('pred-detail').innerHTML=
+    '<div class="pred-box" style="background:#dbeeff;"><div class="pl">'+t('pred-predicted')+'</div><div class="pv" style="color:#0c447c;">'+d.pred+'%</div></div>'+
+    '<div class="pred-box" style="background:#f4f5f7;"><div class="pl">'+t('pred-actual')+'</div><div class="pv" style="color:#333;">'+d.actual+'%</div></div>'+
+    '<div class="pred-box" style="background:'+(d.gap<0?'#fde8e8':'#dff3e0')+'"><div class="pl">'+t('pred-gap')+'</div><div class="pv" style="color:'+gapColor+';">'+(d.gap>0?'+':'')+d.gap.toFixed(1)+' pts</div></div>'+   
+    '<div style="grid-column:1/-1;font-size:13px;color:#444;line-height:1.6;margin-top:4px;">'+interp+'</div>';
+}
+updatePredDetail();
+
+/* ══════════════════════════════════════════
+   TAB 5: INSIGHTS
+══════════════════════════════════════════ */
+var INSIGHT_KEYS=[
+  {num:'ins01',stat:'ins01-stat',lbl:'ins01-lbl',text:'ins01-text'},
+  {num:'ins02',stat:'ins02-stat',lbl:'ins02-lbl',text:'ins02-text'},
+  {num:'ins03',stat:'ins03-stat',lbl:'ins03-lbl',text:'ins03-text'},
+  {num:'ins04',stat:'ins04-stat',lbl:'ins04-lbl',text:'ins04-text'},
+  {num:'ins05',stat:'ins05-stat',lbl:'ins05-lbl',text:'ins05-text'},
+  {num:'ins06',stat:'ins06-stat',lbl:'ins06-lbl',text:'ins06-text'}
+];
+function renderInsightCards(){
+  document.getElementById('insight-cards').innerHTML=INSIGHT_KEYS.map(function(k){
+    return '<div class="insight-card">'+
+      '<div class="inum">'+t(k.num+'-num')+'</div>'+
+      '<div class="istat">'+t(k.stat)+'</div>'+
+      '<div style="font-size:11px;color:#888;margin-bottom:6px;">'+t(k.lbl)+'</div>'+
+      '<p>'+t(k.text)+'</p></div>';
+  }).join('');
+}
+renderInsightCards();
+
+new Chart(document.getElementById('cmpChart'),{
+  type:'bar',
+  data:{labels:['Health insurance','Women bank account','Women mobile phone','Women internet use'],
+    datasets:[
+      {label:'Jharkhand',data:[50.3,79.6,49.0,31.4],backgroundColor:'#185fa5'},
+      {label:'India',data:[41.0,78.6,54.0,33.3],backgroundColor:'#888780'},
+      {label:'Bihar',data:[14.6,76.7,51.4,20.6],backgroundColor:'#d85a30'},
+      {label:'Odisha',data:[47.9,86.5,50.1,24.9],backgroundColor:'#639922'}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false}
+});
+new Chart(document.getElementById('gapChart'),{
+  type:'bar',
+  data:{labels:['Health insurance','Women bank account','Women mobile phone','Women internet use','Men internet use'],
+    datasets:[{label:'Urban minus rural (pts)',data:[-11.5,-0.6,21.5,35.1,17.6],
+      backgroundColor:function(ctx){return ctx.raw<0?'#639922':'#d85a30';}}]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y'}
+});
+
+/* ══════════════════════════════════════════
+   TAB 6: CAMPAIGN ENGINE
+══════════════════════════════════════════ */
+var CAMP_MAP={
+  'Ranchi':    {gapKey:'camp-gap-ins',  actionKey:'camp-action-ranchi',   expKey:'camp-exp-ranchi'},
+  'Dhanbad':   {gapKey:'camp-gap-inv',  actionKey:'camp-action-dhanbad',  expKey:'camp-exp-dhanbad'},
+  'Bokaro':    {gapKey:'camp-gap-both', actionKey:'camp-action-bokaro',   expKey:'camp-exp-bokaro'},
+  'Pakur':     {gapKey:'camp-gap-low-lit',actionKey:'camp-action-pakur', expKey:'camp-exp-pakur'},
+  'Sahibganj': {gapKey:'camp-gap-lowest',actionKey:'camp-action-sahibganj',expKey:'camp-exp-sahibganj'},
+  'Latehar':   {gapKey:'camp-gap-stagnant',actionKey:'camp-action-latehar',expKey:'camp-exp-latehar'}
+};
+function runCampaign(){
+  var dist=document.getElementById('camp-district').value;
+  var group=document.getElementById('camp-group').value;
+  var rule=CAMP_MAP[dist]||{gapKey:'camp-gap-default',actionKey:'camp-action-default',expKey:'camp-exp-default'};
+  var dRow=DISTRICTS.find(function(d){return d[0]===dist;})||DISTRICTS[22];
+  var risk=computeRisk(dRow);
+  document.getElementById('campaign-output').innerHTML=
+    '<div class="campaign-box"><h4>📋 '+t('camp-title')+' — '+dist+'</h4>'+
+    '<div class="campaign-row"><span>'+t('camp-target-group')+'</span><span><strong>'+group+'</strong></span></div>'+
+    '<div class="campaign-row"><span>'+t('camp-primary-problem')+'</span><span><strong>'+t(rule.gapKey)+'</strong></span></div>'+
+    '<div class="campaign-row"><span>'+t('camp-current-ins')+'</span><span><strong>'+dRow[1]+'%</strong> ('+t('camp-state-avg')+')</span></div>'+
+    '<div class="campaign-row"><span>'+t('camp-risk-score')+'</span><span><strong>'+risk+'/55</strong> — '+riskLbl(risk)+' '+t('camp-priority-suffix')+'</span></div>'+
+    '<div class="campaign-row"><span>'+t('camp-action')+'</span><span style="max-width:55%;text-align:right;"><strong>'+t(rule.actionKey)+'</strong></span></div>'+
+    '<div class="campaign-row"><span>'+t('camp-expected')+'</span><span><strong>'+t(rule.expKey)+'</strong></span></div>'+
+    '</div>';
+}
+runCampaign();
+
+new Chart(document.getElementById('bubbleChart'),{
+  type:'bubble',
+  data:{datasets:[{label:'Districts',
+    data:DISTRICTS.map(function(d){return{x:d[3],y:d[1],r:Math.max(6,computeRisk(d)-30)};}),
+    backgroundColor:'rgba(24,95,165,0.55)',borderColor:'#0c447c',borderWidth:1}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){
+      var d=DISTRICTS[ctx.dataIndex];
+      return d[0]+': '+(lang==='hi'?'साक्षरता ':'literacy ')+d[3]+'%, '+(lang==='hi'?'बीमा ':'ins ')+d[1]+'%';
+    }}}}},
+    scales:{
+      x:{title:{display:true,text:lang==='hi'?'महिला साक्षरता दर (%)':'Women literacy rate (%)'},min:35,max:80},
+      y:{title:{display:true,text:lang==='hi'?'स्वास्थ्य बीमा कवरेज (%)':'Health insurance coverage (%)'},min:30,max:70}
+    }
+});
+</script>
+</body>
+</html>

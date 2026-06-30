@@ -1,3 +1,4 @@
+
 # Jharkhand Financial Inclusion Intelligence Platform
 
 A data-driven decision-support platform analysing financial literacy and financial inclusion across Jharkhand, India — built for citizens, government officials, and NGOs.
@@ -71,3 +72,4 @@ This project uses publicly available government data (NFHS-5/NFHS-4, PMJDY, data
 ## Author
 
 Kajal Kumari — B.C.A., Stella Maris College | Programmer Tata Consultancy Services .
+

@@ -34,7 +34,7 @@ All figures are from public government sources:
 - **NFHS-5 (2019–21) and NFHS-4 (2015–16) district fact sheets**, International Institute for Population Sciences (IIPS), Ministry of Health & Family Welfare — district-level insurance coverage, literacy, urban/rural breakdowns.
 - **PMJDY state-wise accounts data**, data.gov.in (23 Feb 2024 snapshot) — Pradhan Mantri Jan Dhan Yojana account totals, normalised by state population.
 - **Government scheme guidelines**, Department of Financial Services, Ministry of Finance — PMSBY, PMJJBY, PMJDY, APY, PPF, NPS terms and eligibility.
-- **Pilot survey, n=48** — an original survey of friends, family, and peers in Jharkhand, used to calibrate the assessment's scoring weights (via correlation with self-rated financial confidence) and to discover financial-literacy personas via K-Means clustering (k=3).
+- **Pilot survey, n=60** — an original survey of friends, family, and peers in Jharkhand, used to calibrate the assessment's scoring weights (via correlation with self-rated financial confidence) and to discover financial-literacy personas via K-Means clustering (k=3).
 
 ## Methodology notes (for technical reviewers)
 
